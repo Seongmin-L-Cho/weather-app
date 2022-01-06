@@ -2,41 +2,93 @@ import React, { useEffect, useState } from "react";
 import Loading from "./Loading";
 import { Alert } from "react-native";
 import * as Location from "expo-location";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+import axios from "axios";
+
+const API_KEY = "75e30da1add10c5eb5de39cdf6e265fd";
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [city, setCity] = useState("Loading");
+  const [ok, setOk] = useState();
+  const [days, setDays] = useState(true);
+  getWeater = async (latitude, longitude) => {};
 
-  getLocation = async () => {
-    try {
-      await Location.requestForegroundPermissionsAsync();
-      const {
-        coords: { latitude, longitude },
-      } = await Location.getCurrentPositionAsync(); // 현재 위지 알기
-      // Send to Api and get Weather
-      setIsLoading(false);
-    } catch (e) {
-      Alert.alert("cant find you", "So sad");
+  const getWeather = async () => {
+    const { granted } = await Location.requestForegroundPermissionsAsync();
+    if (granted) {
+      setOk(false);
     }
+    const {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync({ accracy: 5 }); // 현재 위지 알기
+
+    const location = await Location.reverseGeocodeAsync(
+      { latitude, longitude },
+      { useGoogleMaps: false }
+    );
+    setCity(location[0].district);
   };
 
+  // const getLocation = async () => {
+  //   try {
+  //     // Send to Api and get Weather
+  //     setIsLoading(false);
+  //     console.log(latitude, longitude);
+  //   } catch (e) {
+  //     Alert.alert("cant find you", "So sad");
+  //   }
+  // };
+
   useEffect(() => {
-    getLocation();
+    getWeather();
+    // getLocation();
   });
 
-  return isLoading ? <Loading /> : <View style={styles.container}></View>;
+  return (
+    <View style={styles.container}>
+      <View style={styles.city}>
+        <Text style={styles.cityName}>{city}</Text>
+      </View>
+      <ScrollView
+        pagingEnabled
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.weather}
+      >
+        <View style={styles.day}>
+          <Text style={styles.temp}>27</Text>
+          <Text style={styles.description}>Sunny</Text>
+        </View>
+        <View style={styles.day}>
+          <Text style={styles.temp}>27</Text>
+          <Text style={styles.description}>Sunny</Text>
+        </View>
+        <View style={styles.day}>
+          <Text style={styles.temp}>27</Text>
+          <Text style={styles.description}>Sunny</Text>
+        </View>
+        <View style={styles.day}>
+          <Text style={styles.temp}>27</Text>
+          <Text style={styles.description}>Sunny</Text>
+        </View>
+      </ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
-    paddingHorizontal: 30, // RN 전용 CSS
-    paddingVertical: 100, // RN 전용 CSS
-    backgroundColor: "red",
+    backgroundColor: "tomato",
   },
-  text: {
-    color: "#2c2c2c",
-    fontSize: 20, //px를 사용할 경우 "20px"라고 스트링으로 입력해야함
+  city: {
+    flex: 1.2,
+    justifyContent: "center",
+    alignItems: "center",
   },
+  cityName: {
+    fontSize: 58,
+    fontWeight: "500",
+  },
+  weather: {},
 });
