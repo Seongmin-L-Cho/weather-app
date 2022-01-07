@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import * as Location from "expo-location";
 import Constants from "expo-constants";
-import { Fontiso } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const API_KEY = "75e30da1add10c5eb5de39cdf6e265fd";
+const API_KEY = Constants.manifest.extra.apikey;
 
 const icons = {
   Clouds: "cloudy",
@@ -27,7 +27,7 @@ const icons = {
 
 export default function App() {
   const [city, setCity] = useState("Loading...");
-  const [ok, setOk] = useState();
+  const [ok, setOk] = useState(true);
   const [days, setDays] = useState([]);
 
   const getWeather = async () => {
@@ -119,22 +119,30 @@ const styles = StyleSheet.create({
   cityName: {
     fontSize: 58,
     fontWeight: "500",
+    color: "white",
   },
   weather: {},
   day: {
     width: SCREEN_WIDTH,
-    alignItems: "center",
+    alignItems: "flex-start",
+    paddingHorizontal: 20,
   },
   temp: {
     marginTop: 50,
     fontWeight: "600",
-    fontSize: 178,
+    fontSize: 100,
+    color: "white",
   },
   description: {
-    marginTop: -30,
-    fontSize: 60,
+    marginTop: -10,
+    fontSize: 30,
+    color: "white",
+    fontWeight: "500",
   },
   tinyText: {
-    fontSize: 20,
+    marginTop: -5,
+    fontSize: 25,
+    color: "white",
+    fontWeight: "500",
   },
 });
